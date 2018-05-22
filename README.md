@@ -1,2 +1,3 @@
-# relax-orm
-A ORM based on knex focused in OracleDb
+# ReLaX-ORM
+-----
+Designed to reduce the stress you feel while leading with OracleDB.
