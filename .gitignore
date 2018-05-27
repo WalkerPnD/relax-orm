@@ -1,0 +1,20 @@
+# Mac
+*.DS_Store
+
+# libraries
+node_modules
+
+#logs
+npm-debug.log
+
+# build
+./dist
+
+# testing
+coverage
+.nyc_output
+!test/tsconfig.mocha.js
+
+# Other
+ref
+e2e
