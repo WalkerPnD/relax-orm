@@ -1,0 +1,14 @@
+.github
+.vscode
+bin
+coverage
+e2e
+ref
+test
+.editorconfig
+.gitignore
+CHANGELOG.md
+CONTRIBUTING.md
+jest.config.js
+README.md
+test.sh
