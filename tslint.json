@@ -1,0 +1,29 @@
+{
+  "extends": "tslint-config-standard",
+  "jsRules": { "no-unused-expression": true },
+  "rules": {
+    "eofline": false,
+    "await-promise": { "severity": "warning", "options": ["IPromise"] },
+    "space-before-function-paren": [true, "never"],
+    "semicolon": [true, "always"],
+    "typedef": [true, "call-signature", "parameter", "member-variable-declaration"],
+    "quotemark": [ true, "single" ],
+    "indent": true,
+    "member-access": [ false ],
+    "ordered-imports": [ true ],
+    "max-line-length": [ true, 150 ],
+    "trailing-comma": [ true, { "multiline": "always", "singleline": "never" }],
+    "member-ordering": [ false ],
+    "curly": false,
+    "interface-name": [ false ],
+    "array-type": [ false ],
+    "no-empty-interface": false,
+    "no-empty": false,
+    "object-literal-sort-keys": false,
+    "no-unused-expression": false,
+    "max-classes-per-file": [ true ],
+    "variable-name": [ false ],
+    "one-line": [ false ],
+    "one-variable-per-declaration": [ false ]
+  }
+}

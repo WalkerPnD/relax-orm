@@ -1,0 +1,45 @@
+{
+  "name": "relax-orm",
+  "version": "0.0.1",
+  "description": "ORM for OracleDB",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "-------------  Tests  ------------": "",
+    "lint": "tslint --project .",
+    "pretest": "npm run lint",
+    "test": "jest",
+    "------------- Publish ------------": "",
+    "build": "tsc",
+    "publish": "npm publish --access=public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/walker-walks/relax-orm.git"
+  },
+  "keywords": [
+    "OracleDB",
+    "ORM",
+    "node.js"
+  ],
+  "author": "M. Koji Carvalho",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/walker-walks/relax-orm/issues"
+  },
+  "homepage": "https://github.com/walker-walks/relax-orm#readme",
+  "devDependencies": {
+    "@types/jest": "22.2.3",
+    "@types/node": "10.1.2",
+    "@types/oracledb": "1.11.34",
+    "jest": "23.0.0",
+    "ts-jest": "22.4.6",
+    "tslint": "5.10.0",
+    "tslint-config-standard": "7.0.0",
+    "typescript": "2.8.3"
+  },
+  "dependencies": {
+    "oracledb": "2.2.0",
+    "reflect-metadata": "0.1.12"
+  }
+}
