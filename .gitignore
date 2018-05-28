@@ -18,3 +18,4 @@ coverage
 # Other
 ref
 e2e
+dist/

@@ -1,6 +1,6 @@
 {
   "name": "relax-orm",
-  "version": "0.0.1",
+  "version": "0.1.2",
   "description": "ORM for OracleDB",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

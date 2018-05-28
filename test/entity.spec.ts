@@ -20,13 +20,16 @@ describe('Table Decorator', () => {
 
     it('should return table attributes', () => {
       const result: ITableAttr = {
-        id: {
-          column: USER_ID,
-          type: DataType.Number,
-        },
-        name: {
-          column: 'NAME',
-          type: DataType.String,
+        rowNameMap: {},
+        columsInfo: {
+          id: {
+            column: USER_ID,
+            type: DataType.Number,
+          },
+          name: {
+            column: 'NAME',
+            type: DataType.String,
+          },
         },
       };
       expect(getAttributes(user)).toEqual(result);
