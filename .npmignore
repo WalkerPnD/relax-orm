@@ -3,6 +3,7 @@
 bin
 coverage
 e2e
+lib
 ref
 test
 .editorconfig
