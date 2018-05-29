@@ -4,7 +4,7 @@ import { userResult } from './datas/user-resulta.data';
 import { User } from './models/user.model';
 import { errHandler } from './util/error.handler';
 
-describe('Table Decorator', () => {
+describe.skip('Table Decorator', () => {
   // const user = new User();
   const conn = new ConnectionManager({
     user          : DBCONFIG.user,
