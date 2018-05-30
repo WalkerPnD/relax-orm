@@ -20,7 +20,10 @@ describe('Table Decorator', () => {
 
     it('should return table attributes', () => {
       const result: ITableAttr = {
-        rowNameMap: {},
+        rowNameMap: {
+          NAME: 'name',
+          [USER_ID]: 'id',
+        },
         columsInfo: {
           id: {
             column: USER_ID,
