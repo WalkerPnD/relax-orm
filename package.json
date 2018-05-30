@@ -9,6 +9,7 @@
     "lint": "tslint --project .",
     "pretest": "npm run lint",
     "test": "jest",
+    "report": "codecov -f coverage/coverage-final.json",
     "------------- Publish ------------": "",
     "build": "tsc",
     "publish": "npm publish --access=public"
@@ -32,6 +33,7 @@
     "@types/jest": "22.2.3",
     "@types/node": "10.1.2",
     "@types/oracledb": "1.11.34",
+    "codecov": "^3.0.2",
     "jest": "23.0.0",
     "ts-jest": "22.4.6",
     "tslint": "5.10.0",
