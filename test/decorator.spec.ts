@@ -34,7 +34,7 @@ describe('If Decorator records informations properly.', () => {
   });
 
   it('should return column options [Sequence]', () => {
-    const result: IColumnOption = { sequence: USER_SEQUENCE };
+    const result: IColumnOption = { primaryKey: true, sequence: USER_SEQUENCE };
     expect(getOptions(user, 'id')).toEqual(result);
   });
 
