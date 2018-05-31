@@ -1,5 +1,6 @@
 import { ColumnOption } from '../enum/option.type';
 import { IAttrInfo } from './column-option.interface';
+import { PrimitiveTypes } from './where.interface';
 
 export interface ITableAttr {
   rowNameMap: {
@@ -11,5 +12,6 @@ export interface ITableAttr {
 }
 
 export interface IColumnOption {
-  [ColumnOption.sequence]: string;
+  [ColumnOption.primaryKey]: PrimitiveTypes;
+  [ColumnOption.sequence]: PrimitiveTypes;
 }

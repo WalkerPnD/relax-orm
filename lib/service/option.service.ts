@@ -1,8 +1,9 @@
 import { ColumnOptionType } from '../enum/option.type';
 import { IColumnOption } from '../interface/table-attribute.interface';
+import { PrimitiveTypes } from '../interface/where.interface';
 import { OPTIONS_KEY } from './key.constant';
 
-export function addOption(target: any, propertyKey: string, optionKey: ColumnOptionType, optionValue: string): void {
+export function addOption(target: any, propertyKey: string, optionKey: ColumnOptionType, optionValue: PrimitiveTypes): void {
   const options = getOptions(target, propertyKey);
   options[optionKey] = optionValue;
   Reflect.defineMetadata(OPTIONS_KEY, options, target, propertyKey);

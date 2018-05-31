@@ -2,7 +2,8 @@ import { ResultOrder } from '../enum/result-order.type';
 
 export type ResultOrderType = [string, keyof typeof ResultOrder];
 export type PrimitiveTypes = string | number | boolean | typeof Date;
-export type MapperObject = {[key: string]: PrimitiveTypes};
+export type OracleBindType = {dir?: number, type?: number, maxSize?: number};
+export type MapperObject = {[key: string]: PrimitiveTypes | OracleBindType};
 
 export interface IFindOptions<T> {
   where?: WhereOptions<T>;
