@@ -13,3 +13,9 @@ https://semver.org/
 - added Endity: create with value function
 - fix Library: Exports
 
+## [v0.2.0] - 2018-05-31
+> feat(Entity): update 'Create' function with PrimaryKey and Sequence Decorators
+- added Decorator[PrimaryKey]: create Function now returns primaryKey value
+- added Decorator[Sequence]: 'Create' function uses Squence on Create
+- added Entity: findAll unit tests
+
