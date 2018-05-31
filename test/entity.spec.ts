@@ -1,46 +1,37 @@
+import { IExecuteReturn } from 'oracledb';
 import { getTableName } from '../lib/decorator/table';
 import { DataType } from '../lib/enum/data.type';
 import { IColumnOption, ITableAttr } from '../lib/interface/table-attribute.interface';
 import { getAttributes } from '../lib/service/attribute.service';
 import { getOptions } from '../lib/service/option.service';
-import { USER_ID, USER_SEQUENCE, USER_TABLE } from './models/name.consts';
-import { User } from './models/user.model';
+import { MockConnectionManager } from './_mocks/connection-manager.mock';
+import { USER_ID, USER_SEQUENCE, USER_TABLE } from './_mocks/contants/name.consts';
+import { userFindAllEmptyResult, userFindallExpects, userFindAllUserResult } from './_mocks/contants/user-resulta.data';
+import { User } from './_mocks/user.model';
 
-describe('Table Decorator', () => {
+describe('Entity functions works correctly', () => {
   const user = new User();
-  // beforeEach(() => {
-  //   console.log('prepare');
-  // });
+  let connManager: MockConnectionManager;
 
-  describe('Decorator sets table name.', () => {
-
-    it('should return table name', () => {
-      expect(getTableName(User)).toEqual(USER_TABLE);
-    });
-
-    it('should return table attributes', () => {
-      const result: ITableAttr = {
-        rowNameMap: {
-          NAME: 'name',
-          [USER_ID]: 'id',
-        },
-        columsInfo: {
-          id: {
-            column: USER_ID,
-            type: DataType.Number,
-          },
-          name: {
-            column: 'NAME',
-            type: DataType.String,
-          },
-        },
-      };
-      expect(getAttributes(user)).toEqual(result);
-    });
-
-    it('should return column options [Sequence]', () => {
-      const result: IColumnOption = { sequence: USER_SEQUENCE };
-      expect(getOptions(user, 'id')).toEqual(result);
-    });
+  beforeEach(() => {
+    connManager = new MockConnectionManager();
+    User.conn = connManager;
   });
+
+  describe('FindAll functions', () => {
+
+    it('Should return mapped entity.', () => {
+      (connManager.execute as sinon.SinonStub).resolves(userFindAllUserResult);
+
+      expect(User.findAll()).resolves.toEqual(userFindallExpects);
+    });
+
+    it('Shoud return empty result.', () => {
+      (connManager.execute as sinon.SinonStub).resolves(userFindAllEmptyResult);
+
+      expect(User.findAll()).resolves.toEqual([]);
+    });
+
+  });
+
 });

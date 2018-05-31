@@ -7,3 +7,9 @@ export function Sequence(sequenceName: string): Function {
     addOption(target, propertyKey, ColumnOption.sequence , sequenceName);
   };
 }
+
+export function PrimaryKey(): Function {
+  return (target: any, propertyKey: string) => {
+    addOption(target, propertyKey, ColumnOption.primaryKey, true);
+  };
+}
