@@ -9,6 +9,11 @@ import { mapResult } from './mapper';
 export class Entity<T extends Entity<T>> {
   static conn: IConnectionManager;
 
+  static async findOne<T extends Entity<T>>(this: (new () => T), findOptions?: IFindOptions<T>): Promise<T | null> {
+    const result = await (this as any as typeof Entity).findAll(findOptions) as T[];
+    return result[0] ? result[0] : null;
+  }
+
   static async findAll<T extends Entity<T>>(this: (new () => T), findOptions?: IFindOptions<T>): Promise<T[]> {
     const entity = new this();
     const table = getTableName(this);
