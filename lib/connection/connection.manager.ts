@@ -2,10 +2,11 @@ import oracledb from 'oracledb';
 import { Entity } from '../entity/entity';
 import { IConnectionManager } from './connection-manager.interface';
 
+// Please DO NOT write unit test for this Class.
 export class ConnectionManager implements IConnectionManager{
 
   // tslint:disable-next-line:typedef
-  public readonly config = oracledb;
+  static readonly config = oracledb;
   public execute!: oracledb.IConnection['execute'];
   private conn!: oracledb.IConnection;
 
@@ -20,8 +21,8 @@ export class ConnectionManager implements IConnectionManager{
     Object.defineProperty(this, 'execute', { writable: false });
   }
 
-  addEntities(entities: Array<typeof Entity>): void {
-    entities.forEach((e): void => {
+  addEntities(entities: Array<any>): void {
+    entities.forEach((e: typeof Entity): void => {
       e.conn = this;
       Object.defineProperty(e, 'conn', { writable: false });
     });
