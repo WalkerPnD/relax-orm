@@ -1,4 +1,5 @@
 import { IExecuteReturn, IMetaData } from 'oracledb';
+import { Entity } from '..';
 import { ITableAttr } from '../interface/table-attribute.interface';
 
 type Mapper = {[key: number]: string};
@@ -17,7 +18,7 @@ function getMapper(metaData: IMetaData[], colInfos: ITableAttr): Mapper {
   return mapperCahe[cacheKey];
 }
 
-export function mapResult<T>(colInfos: ITableAttr, result: IExecuteReturn, entityRef: (new () => T)): T[] | undefined {
+export function mapResult<T extends Entity<T>>(colInfos: ITableAttr, result: IExecuteReturn, entityRef: (new (v?: any) => T)): T[] | undefined {
   if (!result.rows) {
     return undefined;
   }
@@ -31,8 +32,7 @@ export function mapResult<T>(colInfos: ITableAttr, result: IExecuteReturn, entit
   for (const row of result.rows) {
 
     if (!(Array.isArray(row))) {
-      let p = new entityRef();
-      p = { ...row };
+      let p = new entityRef(row as any);
       persisteds.push(p);
       continue;
     }

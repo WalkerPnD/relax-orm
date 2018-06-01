@@ -1,5 +1,6 @@
 # ReLaX ORM
 
+[![npm version](https://badge.fury.io/js/relax-orm.svg)](https://badge.fury.io/js/relax-orm)
 [![Build Status](https://travis-ci.org/walker-walks/relax-orm.svg?branch=master)](https://travis-ci.org/walker-walks/relax-orm)
 [![codecov](https://codecov.io/gh/walker-walks/relax-orm/branch/master/graph/badge.svg)](https://codecov.io/gh/walker-walks/relax-orm)
 
