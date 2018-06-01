@@ -6,7 +6,7 @@ import { IConnectionManager } from './connection-manager.interface';
 export class ConnectionManager implements IConnectionManager{
 
   // tslint:disable-next-line:typedef
-  public readonly config = oracledb;
+  static readonly config = oracledb;
   public execute!: oracledb.IConnection['execute'];
   private conn!: oracledb.IConnection;
 

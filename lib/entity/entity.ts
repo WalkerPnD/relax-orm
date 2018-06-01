@@ -17,12 +17,12 @@ export class Entity<T extends Entity<T>> {
     }
   }
 
-  static async findOne<T extends Entity<T>>(this: (new () => T), findOptions?: IFindOptions<T>): Promise<T | null> {
+  static async findOne<T extends Entity<T>>(this: (new (v?: any) => T), findOptions?: IFindOptions<T>): Promise<T | null> {
     const result = await (this as any as typeof Entity).findAll(findOptions) as T[];
     return result[0] ? result[0] : null;
   }
 
-  static async findAll<T extends Entity<T>>(this: (new () => T), findOptions?: IFindOptions<T>): Promise<T[]> {
+  static async findAll<T extends Entity<T>>(this: (new (v?: any) => T), findOptions?: IFindOptions<T>): Promise<T[]> {
     const entity = new this();
     const table = getTableName(this);
     const attr = getAttributes(entity);
@@ -45,7 +45,7 @@ export class Entity<T extends Entity<T>> {
     return mappedResult ? mappedResult : [];
   }
 
-  static async create<T extends Entity<T>>(this: (new () => T), values: Partial<T>, autoCommit: boolean = true): Promise<T> {
+  static async create<T extends Entity<T>>(this: (new (v?: any) => T), values: Partial<T>, autoCommit: boolean = true): Promise<T> {
     const entity = new this();
     const table = getTableName(this);
     const attr = getAttributes(entity);
