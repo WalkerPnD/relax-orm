@@ -8,8 +8,21 @@ import { mapResult } from './mapper';
 
 export class Entity<T extends Entity<T>> {
   static conn: IConnectionManager;
+  private storedValue!: Partial<T>;
 
-  static async findAll<T extends Entity<T>>(this: (new () => T), findOptions?: IFindOptions<T>): Promise<T[]> {
+  constructor(values?: Partial<T>) {
+    if (values) {
+      Object.assign(this, values);
+      this.storedValue = values;
+    }
+  }
+
+  static async findOne<T extends Entity<T>>(this: (new (v?: any) => T), findOptions?: IFindOptions<T>): Promise<T | null> {
+    const result = await (this as any as typeof Entity).findAll(findOptions) as T[];
+    return result[0] ? result[0] : null;
+  }
+
+  static async findAll<T extends Entity<T>>(this: (new (v?: any) => T), findOptions?: IFindOptions<T>): Promise<T[]> {
     const entity = new this();
     const table = getTableName(this);
     const attr = getAttributes(entity);
@@ -18,9 +31,8 @@ export class Entity<T extends Entity<T>> {
     let binds: MapperObject = {};
 
     query = keys
-    .reduce<string>(
-      (res: string, key: string): string => `${res}${attr.columsInfo[key].column}, `, query)
-    .slice(0, -2);
+      .reduce<string>((res: string, key: string): string => `${res}${attr.columsInfo[key].column}, `, query)
+      .slice(0, -2);
 
     query += ` FROM ${table}`;
     if (findOptions && findOptions.where) {
@@ -29,14 +41,13 @@ export class Entity<T extends Entity<T>> {
     }
 
     const result = await (this as any as typeof Entity).conn.execute(query, binds);
-    const mappedResult = mapResult<T>(attr, result, this);
+    const mappedResult = mapResult(attr, result, this);
     return mappedResult ? mappedResult : [];
   }
 
-  static async create<T extends Entity<T>>(this: (new () => T), values: Partial<T>, autoCommit: boolean = true): Promise<T> {
+  static async create<T extends Entity<T>>(this: (new (v?: any) => T), values: Partial<T>, autoCommit: boolean = true): Promise<T> {
     const entity = new this();
     const table = getTableName(this);
-
     const attr = getAttributes(entity);
     // const keys = Object.keys(attr.columsInfo);
     let query = `BEGIN INSERT INTO ${table}`;
@@ -55,4 +66,11 @@ export class Entity<T extends Entity<T>> {
     return entity;
   }
 
+  async update(this: T, newValues: Partial<T>): Promise<T> {
+    const table = getTableName(this);
+    const attr = getAttributes(this);
+    console.log(table, attr);
+    console.log(this.storedValue);
+    return this;
+  }
 }
