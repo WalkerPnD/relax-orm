@@ -32,7 +32,7 @@ export function mapResult<T extends Entity<T>>(colInfos: ITableAttr, result: IEx
   for (const row of result.rows) {
 
     if (!(Array.isArray(row))) {
-      let p = new entityRef(row as any);
+      let p = new entityRef(row);
       persisteds.push(p);
       continue;
     }
