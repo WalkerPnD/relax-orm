@@ -14,7 +14,10 @@ export class Entity<T extends Entity<T>> {
   constructor(values?: Partial<T>) {
     if (values) {
       Object.assign(this, values);
-      this.storedValue = values;
+      Object.defineProperty(this, 'storedValue', {
+        value: values,
+        writable: false,
+      });
     }
   }
 

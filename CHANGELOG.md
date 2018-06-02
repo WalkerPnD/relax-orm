@@ -4,8 +4,14 @@
 ## Semantic Versioning
 https://semver.org/
 
+## [v0.5.0] - 2018-06-02
+> feat(Entity): create now return the inserted Values
+- change Entity [create]: now returns the inserted values as entity
+- change Entity [create]: simplified the INSERT query. now do not use PROCEDURE anymore.
+- fix Entity [mapping]: change storedValue to not enumerable to keep result clean.
+
 ## [v0.4.0] - 2018-06-02
-> feat(Entity): create 'update' function
+> feat(ConnectionManager): added logging option
 - added ConnectionManager [logging]: configuration to log the query generated
 
 ## [v0.3.0] - 2018-05-31
