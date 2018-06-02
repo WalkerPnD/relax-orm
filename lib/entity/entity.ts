@@ -40,6 +40,10 @@ export class Entity<T extends Entity<T>> {
       query += whereString;
     }
 
+    if ((this as any as typeof Entity).conn.logging) {
+      console.info(query);
+    }
+
     const result = await (this as any as typeof Entity).conn.execute(query, binds);
     const mappedResult = mapResult(attr, result, this);
     return mappedResult ? mappedResult : [];
@@ -56,6 +60,10 @@ export class Entity<T extends Entity<T>> {
     query += parseCreateBinds(values, attr, binds, entity) + ' END;';
     console.log(query);
     console.log(binds);
+
+    if ((this as any as typeof Entity).conn.logging) {
+      console.info(query);
+    }
 
     const result = await (this as any as typeof Entity).conn.execute(query, binds, { autoCommit });
     if (result.outBinds && (result.outBinds as any).out$id) {
