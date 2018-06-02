@@ -4,6 +4,7 @@ import { IFindOptions, MapperObject } from '../interface/where.interface';
 import { parseCreateBinds } from '../parser/create.parser';
 import { parseWhere } from '../parser/where.parser';
 import { getAttributes } from '../service/attribute.service';
+import { mapCommandResult } from './command-result.mapper';
 import { mapResult } from './mapper';
 
 export class Entity<T extends Entity<T>> {
@@ -50,16 +51,14 @@ export class Entity<T extends Entity<T>> {
   }
 
   static async create<T extends Entity<T>>(this: (new (v?: any) => T), values: Partial<T>, autoCommit: boolean = true): Promise<T> {
-    const entity = new this();
+    let entity = new this();
     const table = getTableName(this);
     const attr = getAttributes(entity);
     // const keys = Object.keys(attr.columsInfo);
-    let query = `BEGIN INSERT INTO ${table}`;
+    let query = `INSERT INTO ${table}`;
     let binds: MapperObject = {};
 
-    query += parseCreateBinds(values, attr, binds, entity) + ' END;';
-    console.log(query);
-    console.log(binds);
+    query += parseCreateBinds(values, attr, binds, entity);
 
     if ((this as any as typeof Entity).conn.logging) {
       console.info(query);
@@ -69,8 +68,8 @@ export class Entity<T extends Entity<T>> {
     if (result.outBinds && (result.outBinds as any).out$id) {
       (entity as any).id = (result.outBinds as any).out$id;
     }
+    entity = mapCommandResult(result, this);
 
-    // const mappedResult = mapResult<T>(attr, result, this);
     return entity;
   }
 

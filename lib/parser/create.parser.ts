@@ -22,30 +22,26 @@ export function parseCreateBinds<T>(whereOptions: Partial<T>, cols: ITableAttr, 
     columns += `${columnInfo.column}, `;
     const [inBind, outBind] = bundKey(entityValue, binds, prop, colOptions, columnInfo);
     bindMapping += inBind;
-    outBindMapping = outBind ? outBind : outBindMapping;
+    outBindMapping += outBind;
   });
   columns = columns.slice(0, -2);
   bindMapping = bindMapping.slice(0, -2);
+  outBindMapping = outBindMapping.slice(0, -2);
 
-  return ` ( ${columns} ) VALUES ( ${bindMapping} )${outBindMapping};`;
+  return ` ( ${columns} ) VALUES ( ${bindMapping} ) RETURNING ${columns} INTO ${outBindMapping}`;
 }
 
 function bundKey(entityValue: any, binds: MapperObject, prop: string, colOptions: IColumnOption, colInfo: IAttrInfo): [string, string] {
-  const bindKey = `${prop}$`;
-  let outBind = '';
+  const outBindKey = `out$${prop}`;
+  const outBind = `:${outBindKey}, `;
+  binds[outBindKey] = { dir : OracleBind.BIND_OUT, type: OrcleDataTypeConst[colInfo.type] };
 
-  if (colOptions.primaryKey && (colInfo.type === DataType.Number || DataType.String)) {
-    const outBindKey = `out$${prop}`;
-    const dataType = DataType.Number ? OrcleDataTypeConst.NUMBER : OrcleDataTypeConst.STRING;
-
-    binds[outBindKey] = { dir : OracleBind.BIND_OUT, type: dataType };
-    outBind = ` RETURNING ${colInfo.column} INTO :${outBindKey}`;
-  }
-
+  // If colunm has SEQUENCE as priority
   if (colOptions.sequence) {
     return [`${colOptions.sequence}.NEXTVAL, `, outBind];
   }
 
+  const bindKey = `${prop}$`;
   binds[bindKey] = entityValue;
   return [`:${bindKey}, `, outBind];
 }
