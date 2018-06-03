@@ -29,7 +29,7 @@ Optionaly you can declare the use of sequence witch will be used on INSERT.
 @Table('USER_TABLE')
 export class User extends Entity<User>{
 
-  @PrimaryKey()
+  @PrimaryKey() // Each entity requires one PrimaryKey to use 'save' function
   @Sequence('USER_SEQUENCE')
   @Column('USER_ID')
   id?: number;
@@ -66,9 +66,34 @@ After registering you can use the basic queries.
 
 ```typescript
 User.findAll()
-User.findOne( {where: { id: 1 } });
+/*
+Generages: 
+SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USE
+*/
+User.findAll( {where: { id: 1, name: 'walker' } });
+/*
+Generages: 
+SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USER WHERE SEQ_NUM_USER = :id$ AND NAME = :name$
+*/
 User.create({
   id: 10, // If @Sequence is declared, this value will be ignored
   name: 'walker'
 })
+/*
+Generages: 
+INSERT INTO RLXORM.TB_USER ( SEQ_NUM_USER, NAME ) VALUES ( RLXORM.SQ_USER.NEXTVAL, :name$ ) RETURNING SEQ_NUM_USER, NAME INTO :out$id, :out$name
+*/
+
+// Saving entity
+const user = User.findOne({ where: {id: 1} });
+/*
+Generages: 
+SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USER WHERE SEQ_NUM_USER = :id$
+*/
+user.name = 'style';
+user.save();
+/*
+Generages: 
+UPDATE RLXORM.TB_USER SET SEQ_NUM_USER = :id$, NAME = :name$ WHERE SEQ_NUM_USER = :key$id RETURNING SEQ_NUM_USER, NAME INTO :out$id, :out$name
+*/
 ```

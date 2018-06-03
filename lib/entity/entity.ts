@@ -1,9 +1,11 @@
 import { IConnectionManager } from '../connection/connection-manager.interface';
 import { getTableName } from '../decorator/table';
 import { IFindOptions, MapperObject } from '../interface/where.interface';
-import { parseCreateBinds } from '../parser/create.parser';
+import { parseCreate } from '../parser/create.parser';
+import { parseSave } from '../parser/save.parser';
 import { parseWhere } from '../parser/where.parser';
 import { getAttributes } from '../service/attribute.service';
+import { mapCommandResult } from './command-result.mapper';
 import { mapResult } from './mapper';
 
 export class Entity<T extends Entity<T>> {
@@ -13,7 +15,10 @@ export class Entity<T extends Entity<T>> {
   constructor(values?: Partial<T>) {
     if (values) {
       Object.assign(this, values);
-      this.storedValue = values;
+      Object.defineProperty(this, 'storedValue', {
+        value: values,
+        writable: true,
+      });
     }
   }
 
@@ -40,37 +45,41 @@ export class Entity<T extends Entity<T>> {
       query += whereString;
     }
 
+    if ((this as any as typeof Entity).conn.logging) {
+      console.info(query);
+    }
+
     const result = await (this as any as typeof Entity).conn.execute(query, binds);
     const mappedResult = mapResult(attr, result, this);
     return mappedResult ? mappedResult : [];
   }
 
   static async create<T extends Entity<T>>(this: (new (v?: any) => T), values: Partial<T>, autoCommit: boolean = true): Promise<T> {
-    const entity = new this();
+    let entity = new this();
     const table = getTableName(this);
     const attr = getAttributes(entity);
-    // const keys = Object.keys(attr.columsInfo);
-    let query = `BEGIN INSERT INTO ${table}`;
-    let binds: MapperObject = {};
 
-    query += parseCreateBinds(values, attr, binds, entity) + ' END;';
-    console.log(query);
-    console.log(binds);
+    const [query, binds] = parseCreate(table, values, attr, entity);
 
-    const result = await (this as any as typeof Entity).conn.execute(query, binds, { autoCommit });
-    if (result.outBinds && (result.outBinds as any).out$id) {
-      (entity as any).id = (result.outBinds as any).out$id;
+    if ((this as any as typeof Entity).conn.logging) {
+      console.info(query);
     }
 
-    // const mappedResult = mapResult<T>(attr, result, this);
-    return entity;
+    const result = await (this as any as typeof Entity).conn.execute(query, binds, { autoCommit });
+
+    return mapCommandResult(result, this);
   }
 
-  async update(this: T, newValues: Partial<T>): Promise<T> {
-    const table = getTableName(this);
-    const attr = getAttributes(this);
-    console.log(table, attr);
-    console.log(this.storedValue);
-    return this;
+  async save(autoCommit: boolean = true): Promise<void> {
+    const conn = this.constructor.prototype.constructor.conn;
+
+    const [query, binds] = parseSave(this as any, this.storedValue);
+
+    await conn.execute(query, binds, { autoCommit });
+    if (conn.logging) {
+      console.info(query);
+    }
+    this.storedValue = Object.assign(this.storedValue, this);
+
   }
 }

@@ -1,13 +1,16 @@
+import { DataType } from './data.type';
+
 export enum OracleBind {
   BIND_OUT= 3003,
 }
-export enum OrcleDataTypeConst {
-  BLOB = 2007,
-  BUFFER = 2005,
-  CLOB = 2006,
-  CURSOR = 2004,
-  DATE = 2003,
-  DEFAULT = 0,
-  NUMBER = 2002,
-  STRING = 2001,
-}
+
+export const OrcleDataTypeConst: Readonly<any> = {
+  [DataType.Date]: 2003,
+  [DataType.Number]: 2002,
+  [DataType.String]: 2001,
+  [DataType.CLOB]: 2006,
+  BLOB: 2007,
+  BUFFER: 2005,
+  CURSOR: 2004,
+  DEFAULT: 0,
+};

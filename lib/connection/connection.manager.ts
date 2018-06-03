@@ -7,7 +7,10 @@ export class ConnectionManager implements IConnectionManager{
 
   // tslint:disable-next-line:typedef
   static readonly config = oracledb;
+
   public execute!: oracledb.IConnection['execute'];
+  public logging: boolean = true;
+
   private conn!: oracledb.IConnection;
 
   constructor(private readonly poolAttributes: oracledb.IPoolAttributes) {

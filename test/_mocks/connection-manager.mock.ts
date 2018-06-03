@@ -4,4 +4,5 @@ import { IConnectionManager } from '../../lib/connection/connection-manager.inte
 
 export class MockConnectionManager implements IConnectionManager {
   execute: IConnection['execute'] = stub();
+  logging: boolean = false;
 }

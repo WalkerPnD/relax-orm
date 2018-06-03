@@ -38,4 +38,11 @@ export const userFindAllEmptyResult: IExecuteReturn = {
 export const userFindallExpects: User[] = [
   { id: USER_ONE.id, name: USER_ONE.name },
   { id: USER_TWO.id, name: USER_TWO.name },
-];
+] as User[];
+
+export const createUserResult: IExecuteReturn = {
+  outBinds: { 'out$id': [ USER_ONE.id ], 'out$name': [ USER_ONE.name ] },
+  rowsAffected: 1,
+  metaData: undefined,
+  rows: undefined,
+};
