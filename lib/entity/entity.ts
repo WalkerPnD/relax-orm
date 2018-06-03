@@ -1,7 +1,9 @@
 import { IConnectionManager } from '../connection/connection-manager.interface';
 import { getTableName } from '../decorator/table';
-import { IFindOptions, MapperObject } from '../interface/where.interface';
+import { IFindOptions, MapperObject, WhereOptions } from '../interface/where.interface';
 import { parseCreate } from '../parser/create.parser';
+import { parserLimitOffset } from '../parser/limit-offset.parser';
+import { parseOrder } from '../parser/order.parser';
 import { parseSave } from '../parser/save.parser';
 import { parseWhere } from '../parser/where.parser';
 import { getAttributes } from '../service/attribute.service';
@@ -29,22 +31,34 @@ export class Entity<T extends Entity<T>> {
 
   static async findAll<T extends Entity<T>>(this: (new (v?: any) => T), findOptions?: IFindOptions<T>): Promise<T[]> {
     const entity = new this();
-    const table = getTableName(this);
     const attr = getAttributes(entity);
     const keys = Object.keys(attr.columsInfo);
-    let query = 'SELECT ';
+    let table = getTableName(this);
+    let whereOptions = '';
+    let orderString = '';
     let binds: MapperObject = {};
 
-    query = keys
-      .reduce<string>((res: string, key: string): string => `${res}${attr.columsInfo[key].column}, `, query)
+    const columns = keys
+      .reduce<string>((res: string, key: string): string => `${res}${attr.columsInfo[key].column}, `, '')
       .slice(0, -2);
 
-    query += ` FROM ${table}`;
     if (findOptions && findOptions.where) {
-      const whereString = parseWhere(findOptions.where, attr, binds);
-      query += whereString;
+      whereOptions += parseWhere(findOptions.where, attr, binds);
     }
 
+    if (findOptions && findOptions.order) {
+      orderString = parseOrder(findOptions.order, attr);
+      whereOptions += orderString;
+    }
+
+    if (findOptions && (findOptions.limit || findOptions.offset)) {
+      const [newTable, offsetBinds] = parserLimitOffset(findOptions, table, columns, whereOptions, orderString);
+      table = newTable;
+      whereOptions = '';
+      binds = Object.assign(binds, offsetBinds);
+    }
+
+    const query = `SELECT ${columns} FROM ${table}${whereOptions}`;
     if ((this as any as typeof Entity).conn.logging) {
       console.info(query);
     }
@@ -68,6 +82,37 @@ export class Entity<T extends Entity<T>> {
     const result = await (this as any as typeof Entity).conn.execute(query, binds, { autoCommit });
 
     return mapCommandResult(result, this);
+  }
+
+  // tslint:disable-next-line:max-line-length
+  static async destroy<T extends Entity<T>>(this: (new (v?: any) => T), whereOptions: WhereOptions<T>, autoCommit: boolean = true): Promise<number | undefined> {
+    let entity = new this();
+    const table = getTableName(this);
+    const attr = getAttributes(entity);
+    let query = `DELETE FROM ${table}`;
+    let binds: MapperObject = {};
+    query += parseWhere(whereOptions, attr, binds);
+
+    if ((this as any as typeof Entity).conn.logging) {
+      console.info(query);
+    }
+
+    const result = await (this as any as typeof Entity).conn.execute(query, binds, { autoCommit });
+
+    return result.rowsAffected;
+  }
+
+  static async destroyAll<T extends Entity<T>>(this: (new (v?: any) => T), autoCommit: boolean = true): Promise<number | undefined> {
+    const table = getTableName(this);
+    let query = `DELETE FROM ${table}`;
+
+    if ((this as any as typeof Entity).conn.logging) {
+      console.info(query);
+    }
+
+    const result = await (this as any as typeof Entity).conn.execute(query,{}, { autoCommit });
+
+    return result.rowsAffected;
   }
 
   async save(autoCommit: boolean = true): Promise<void> {
