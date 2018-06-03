@@ -4,6 +4,11 @@
 ## Semantic Versioning
 https://semver.org/
 
+## [v0.7.0] - 2018-06-02
+> feat(Entity): findAll/findOne added orderBy option
+- added Entity [findAll/findOne]: Acepts orderBy option.
+- added Documentation [FindOptions]: OrderBy Examples
+
 ## [v0.6.0] - 2018-06-02
 > feat(Entity): added update function
 - added Entity [update]: updates the values of persted entity.

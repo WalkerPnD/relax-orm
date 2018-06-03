@@ -2,6 +2,7 @@ import { IConnectionManager } from '../connection/connection-manager.interface';
 import { getTableName } from '../decorator/table';
 import { IFindOptions, MapperObject } from '../interface/where.interface';
 import { parseCreate } from '../parser/create.parser';
+import { parseOrder } from '../parser/order.parser';
 import { parseSave } from '../parser/save.parser';
 import { parseWhere } from '../parser/where.parser';
 import { getAttributes } from '../service/attribute.service';
@@ -38,11 +39,16 @@ export class Entity<T extends Entity<T>> {
     query = keys
       .reduce<string>((res: string, key: string): string => `${res}${attr.columsInfo[key].column}, `, query)
       .slice(0, -2);
-
     query += ` FROM ${table}`;
+
     if (findOptions && findOptions.where) {
       const whereString = parseWhere(findOptions.where, attr, binds);
       query += whereString;
+    }
+
+    if (findOptions && findOptions.order) {
+      const orderString = parseOrder(findOptions.order, attr);
+      query += orderString;
     }
 
     if ((this as any as typeof Entity).conn.logging) {

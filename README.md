@@ -6,7 +6,7 @@
 
 ---
 
-Designed to reduce the stress you feel while leading with OracleDB.  
+A lite ORM Designed to reduce the stress you feel while leading with OracleDB.  
 Inspired by [Sequelize](http://docs.sequelizejs.com) and [SequelizeTypescript](https://github.com/RobinBuschmann/sequelize-typescript)
 
 
@@ -94,4 +94,35 @@ user.save();
 /* Generages: 
 UPDATE RLXORM.TB_USER SET SEQ_NUM_USER = :id$, NAME = :name$ WHERE SEQ_NUM_USER = :key$id RETURNING SEQ_NUM_USER, NAME INTO :out$id, :out$name
 */
+```
+
+
+## Query FindOptions
+In findAll and findOne queries you can use options and combine them like examples below.
+
+```typescript
+let res = await User.findAll({
+  order: [
+    [ 'id',ResultOrder.ASC ],
+    [ 'name',ResultOrder.DESC ]
+  ]
+});
+/* Generates:
+SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USER ORDER BY SEQ_NUM_USER ASC, NAME DESC
+*/
+
+res = await User.findAll({
+  where: {
+    name: 'walker',
+  },
+  order: [
+    [ 'id',ResultOrder.ASC ],
+    [ 'name',ResultOrder.DESC ],
+  ],
+})
+/* Generates:
+SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USER WHERE NAME = :name$ ORDER BY SEQ_NUM_USER ASC, NAME DESC
+*/
+
+
 ```
