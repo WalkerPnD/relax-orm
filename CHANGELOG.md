@@ -4,8 +4,17 @@
 ## Semantic Versioning
 https://semver.org/
 
+## [v0.6.0] - 2018-06-02
+> feat(Entity): added update function
+- added Entity [update]: updates the values of persted entity.
+- change Entity [create]: refactored create parser to simplify unit tests.
+- added UnitTest [createParser]: minimum test to check query generated.
+- added UnitTest [updateParser]: minimum test to check query generated.
+- added Documentation [API example]: save function example.
+- added Documentation [API example]: Query example.
+
 ## [v0.5.0] - 2018-06-02
-> feat(Entity): create now return the inserted Values
+> change(Entity): create now return the inserted Values
 - change Entity [create]: now returns the inserted values as entity
 - change Entity [create]: simplified the INSERT query. now do not use PROCEDURE anymore.
 - fix Entity [mapping]: change storedValue to not enumerable to keep result clean.

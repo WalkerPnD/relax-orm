@@ -10,7 +10,6 @@ export function mapCommandResult<T extends Entity<T>>(result: IExecuteReturn, en
   const mappedValues: MapperObject = {};
   Object.keys(result.outBinds).forEach(r => {
     const originalKey = r.slice(4);
-    console.log(originalKey);
     mappedValues[originalKey] = (result.outBinds as any)[r][0];
   });
 

@@ -1,6 +1,7 @@
 import { IExecuteReturn, IMetaData } from 'oracledb';
 import { Entity } from '..';
 import { ITableAttr } from '../interface/table-attribute.interface';
+import { MapperObject } from '../interface/where.interface';
 
 type Mapper = {[key: number]: string};
 const mapperCahe: {[key: string]: Mapper} = {};
@@ -37,10 +38,11 @@ export function mapResult<T extends Entity<T>>(colInfos: ITableAttr, result: IEx
       continue;
     }
 
-    const p = new entityRef();
+    const mappedValue: MapperObject = {};
     row.forEach((col, idx) => {
-      (p as any)[mapper[idx]] = col;
+      (mappedValue as any)[mapper[idx]] = col;
     });
+    const p = new entityRef(mappedValue);
     persisteds.push(p);
   }
 

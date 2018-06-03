@@ -6,7 +6,7 @@ import { getAttributes } from '../lib/service/attribute.service';
 import { getOptions } from '../lib/service/option.service';
 import { MockConnectionManager } from './_mocks/connection-manager.mock';
 import { USER_ID, USER_SEQUENCE, USER_TABLE } from './_mocks/contants/name.consts';
-import { userFindAllEmptyResult, userFindallExpects, userFindAllUserResult } from './_mocks/contants/user-resulta.data';
+import { createUserResult, userFindAllEmptyResult, userFindallExpects, userFindAllUserResult } from './_mocks/contants/user-resulta.data';
 import { User } from './_mocks/user.model';
 
 describe('Entity functions works correctly', () => {
@@ -30,6 +30,32 @@ describe('Entity functions works correctly', () => {
       (connManager.execute as sinon.SinonStub).resolves(userFindAllEmptyResult);
 
       expect(User.findAll()).resolves.toEqual([]);
+    });
+
+  });
+
+  describe('FindOne functions', () => {
+
+    it('Should return mapped entity.', () => {
+      (connManager.execute as sinon.SinonStub).resolves(userFindAllUserResult);
+
+      expect(User.findOne()).resolves.toEqual(userFindallExpects[0]);
+    });
+
+    it('Shoud return null as result.', () => {
+      (connManager.execute as sinon.SinonStub).resolves(userFindAllEmptyResult);
+
+      expect(User.findOne()).resolves.toEqual(null);
+    });
+
+  });
+
+  describe('Create functions', () => {
+
+    it('Should return mapped entity.', () => {
+      (connManager.execute as sinon.SinonStub).resolves(createUserResult);
+
+      expect(User.create(userFindallExpects[0])).resolves.toEqual(userFindallExpects[0]);
     });
 
   });
