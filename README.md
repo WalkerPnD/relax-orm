@@ -66,34 +66,32 @@ After registering you can use the basic queries.
 
 ```typescript
 User.findAll()
-/*
-Generages: 
+/* Generages: 
 SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USE
 */
+
 User.findAll( {where: { id: 1, name: 'walker' } });
-/*
-Generages: 
+/* Generages: 
 SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USER WHERE SEQ_NUM_USER = :id$ AND NAME = :name$
 */
+
 User.create({
   id: 10, // If @Sequence is declared, this value will be ignored
   name: 'walker'
 })
-/*
-Generages: 
+/* Generages: 
 INSERT INTO RLXORM.TB_USER ( SEQ_NUM_USER, NAME ) VALUES ( RLXORM.SQ_USER.NEXTVAL, :name$ ) RETURNING SEQ_NUM_USER, NAME INTO :out$id, :out$name
 */
 
 // Saving entity
 const user = User.findOne({ where: {id: 1} });
-/*
-Generages: 
+/* Generages: 
 SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USER WHERE SEQ_NUM_USER = :id$
 */
+
 user.name = 'style';
 user.save();
-/*
-Generages: 
+/* Generages: 
 UPDATE RLXORM.TB_USER SET SEQ_NUM_USER = :id$, NAME = :name$ WHERE SEQ_NUM_USER = :key$id RETURNING SEQ_NUM_USER, NAME INTO :out$id, :out$name
 */
 ```
