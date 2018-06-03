@@ -1,4 +1,4 @@
-# ReLaX ORM
+# Relax ORM
 
 [![npm version](https://badge.fury.io/js/relax-orm.svg)](https://badge.fury.io/js/relax-orm)
 [![Build Status](https://travis-ci.org/walker-walks/relax-orm.svg?branch=master)](https://travis-ci.org/walker-walks/relax-orm)
@@ -9,6 +9,7 @@
 A lite ORM Designed to reduce the stress you feel while leading with OracleDB.  
 Inspired by [Sequelize](http://docs.sequelizejs.com) and [SequelizeTypescript](https://github.com/RobinBuschmann/sequelize-typescript)
 
+[TypeScript Demo App](https://github.com/walker-walks/relax-orm-typescript-demo)
 
 ## Getting started
 
