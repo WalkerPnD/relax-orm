@@ -94,6 +94,19 @@ user.save();
 /* Generages: 
 UPDATE RLXORM.TB_USER SET SEQ_NUM_USER = :id$, NAME = :name$ WHERE SEQ_NUM_USER = :key$id RETURNING SEQ_NUM_USER, NAME INTO :out$id, :out$name
 */
+
+User.destroy({
+  name: 'walker'
+});
+/* Generages: **NOTE** IT WILL DELETE RECORDS USING WHERE FILTER
+DELETE FROM RLXORM.TB_USER WHERE NAME = :name$
+*/
+
+
+User.destroyAll();
+/* Generages: **NOTE** IT WILL DELETE ALL RECORDS FROM TABLE
+DELETE FROM RLXORM.TB_USER
+*/
 ```
 
 
@@ -119,9 +132,26 @@ res = await User.findAll({
     [ 'id',ResultOrder.ASC ],
     [ 'name',ResultOrder.DESC ],
   ],
-})
+});
 /* Generates:
 SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USER WHERE NAME = :name$ ORDER BY SEQ_NUM_USER ASC, NAME DESC
+*/
+
+res = await User.findAll({
+  limit: 2,
+})
+/* Generates:
+SELECT SEQ_NUM_USER, NAME FROM ( SELECT SEQ_NUM_USER, NAME, ROWNUM as TMP$ROWNUMBER FROM RLXORM.TB_USER ) WHERE TMP$ROWNUMBER
+ <= :TMP$LIMIT
+ */
+
+res = await User.findAll({
+  limit: 2,
+  order: [['name', ResultOrder.ASC]],
+})
+/* Generates: it uses ROW_NUMBER function with over to use ordered result
+SELECT SEQ_NUM_USER, NAME FROM ( SELECT SEQ_NUM_USER, NAME, ROW_NUMBER() OVER( ORDER BY NAME ASC ) as TMP$ROWNUMBER FROM RLXO
+RM.TB_USER ORDER BY NAME ASC ) WHERE TMP$ROWNUMBER <= :TMP$LIMIT
 */
 
 

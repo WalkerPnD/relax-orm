@@ -4,6 +4,16 @@
 ## Semantic Versioning
 https://semver.org/
 
+## [v0.9.0] - 2018-06-02
+> feat(Entity): added destroy/destroyAll function
+- added Entity [destroy]: deletes with where parameter.
+- added Documentation [Entiry]: API example and query generated.
+
+## [v0.8.0] - 2018-06-02
+> feat(Entity): findAll/findOne added limit and offset option
+- added Entity [findAll/findOne]: Acepts limit and offset, it can be used with orderBy aswel.
+- added Documentation [FindOptions]: Limit/Offset Examples and Query Generated.
+
 ## [v0.7.0] - 2018-06-02
 > feat(Entity): findAll/findOne added orderBy option
 - added Entity [findAll/findOne]: Acepts orderBy option.
