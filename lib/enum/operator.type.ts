@@ -1,4 +1,4 @@
-export const Op: {readonly [key: string]: Symbol} = {
+export const Op: {readonly [key: string]: any} = {
   eq: Symbol.for('eq'),
   in: Symbol.for('in'),
   like: Symbol.for('like'),

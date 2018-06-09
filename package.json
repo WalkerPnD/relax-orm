@@ -1,6 +1,6 @@
 {
   "name": "relax-orm",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "ORM for OracleDB",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,7 @@
     "lint": "tslint --project .",
     "pretest": "npm run lint",
     "test": "jest",
-    "e2e": "jest --config jest.e2e.js",
+    "e2e": "jest --config jest.e2e.js --runInBand",
     "report": "codecov -f coverage/coverage-final.json",
     "------------- Publish ------------": "",
     "build": "tsc",
