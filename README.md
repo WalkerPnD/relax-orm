@@ -68,12 +68,15 @@ After registering you can use the basic queries.
 ```typescript
 User.findAll()
 /* Generages: 
-SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USE
+SELECT SEQ_NUM_USER, NAME
+  FROM RLXORM.TB_USE
 */
 
 User.findAll( {where: { id: 1, name: 'walker' } });
 /* Generages: 
-SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USER WHERE SEQ_NUM_USER = :id$ AND NAME = :name$
+SELECT SEQ_NUM_USER, NAME
+  FROM RLXORM.TB_USER
+ WHERE SEQ_NUM_USER = :id$ AND NAME = :name$
 */
 
 User.create({
@@ -81,7 +84,11 @@ User.create({
   name: 'walker'
 })
 /* Generages: 
-INSERT INTO RLXORM.TB_USER ( SEQ_NUM_USER, NAME ) VALUES ( RLXORM.SQ_USER.NEXTVAL, :name$ ) RETURNING SEQ_NUM_USER, NAME INTO :out$id, :out$name
+INSERT
+      INTO RLXORM.TB_USER ( SEQ_NUM_USER, NAME )
+    VALUES ( RLXORM.SQ_USER.NEXTVAL, :name$ )
+ RETURNING SEQ_NUM_USER, NAME
+      INTO :out$id, :out$name
 */
 
 // Saving entity
@@ -116,13 +123,48 @@ In findAll and findOne queries you can use options and combine them like example
 
 ```typescript
 let res = await User.findAll({
+  where: {
+    [Op.or]: [
+      { id: 10 },
+      { id: 11 },
+    ],
+    name: 'walker',
+  },
+});
+/* Generates:
+SELECT SEQ_NUM_USER, NAME
+  FROM RLXORM.TB_USER
+ WHERE ( SEQ_NUM_USER = :id$ )
+    OR ( SEQ_NUM_USER = :id$ )
+   AND NAME = :name$
+*/
+
+res = await User.findOne({
+  where: {
+    [Op.and]: [
+      { id: 10 },
+      { name: 'walker' },
+    ],
+  },
+});
+/* Generates:
+SELECT SEQ_NUM_USER, NAME
+  FROM RLXORM.TB_USER
+ WHERE ( SEQ_NUM_USER = :id$ )
+   AND ( NAME = :name$ )
+*/
+
+
+res = await User.findAll({
   order: [
     [ 'id',ResultOrder.ASC ],
     [ 'name',ResultOrder.DESC ]
   ]
 });
 /* Generates:
-SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USER ORDER BY SEQ_NUM_USER ASC, NAME DESC
+SELECT SEQ_NUM_USER, NAME
+  FROM RLXORM.TB_USER
+ ORDER BY SEQ_NUM_USER ASC, NAME DESC
 */
 
 res = await User.findAll({
@@ -135,24 +177,46 @@ res = await User.findAll({
   ],
 });
 /* Generates:
-SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USER WHERE NAME = :name$ ORDER BY SEQ_NUM_USER ASC, NAME DESC
+SELECT SEQ_NUM_USER, NAME
+  FROM RLXORM.TB_USER
+ WHERE NAME = :name$
+ ORDER BY SEQ_NUM_USER ASC, NAME DESC
 */
 
 res = await User.findAll({
   limit: 2,
-})
+});
 /* Generates:
-SELECT SEQ_NUM_USER, NAME FROM ( SELECT SEQ_NUM_USER, NAME, ROWNUM as TMP$ROWNUMBER FROM RLXORM.TB_USER ) WHERE TMP$ROWNUMBER
- <= :TMP$LIMIT
+SELECT SEQ_NUM_USER, NAME
+  FROM ( SELECT SEQ_NUM_USER, NAME, ROWNUM as TMP$ROWNUMBER
+  FROM RLXORM.TB_USER )
+ WHERE TMP$ROWNUMBER <= :TMP$LIMIT
  */
 
 res = await User.findAll({
   limit: 2,
   order: [['name', ResultOrder.ASC]],
-})
+});
 /* Generates: it uses ROW_NUMBER function with over to use ordered result
-SELECT SEQ_NUM_USER, NAME FROM ( SELECT SEQ_NUM_USER, NAME, ROW_NUMBER() OVER( ORDER BY NAME ASC ) as TMP$ROWNUMBER FROM RLXO
-RM.TB_USER ORDER BY NAME ASC ) WHERE TMP$ROWNUMBER <= :TMP$LIMIT
+SELECT SEQ_NUM_USER, NAME
+  FROM( SELECT SEQ_NUM_USER, NAME, ROW_NUMBER()
+  OVER( ORDER BY NAME ASC ) as TMP$ROWNUMBER
+    FROM RLXORM.TB_USER ORDER BY NAME ASC )
+   WHERE TMP$ROWNUMBER <= :TMP$LIMIT
+*/
+
+res = await User.findAll({
+  order: [['id', ResultOrder.ASC]],
+  offset: 1,
+  limit: 2,
+});
+/* Genarates
+SELECT SEQ_NUM_USER, NAME
+  FROM ( SELECT SEQ_NUM_USER, NAME, ROW_NUMBER()
+  OVER( ORDER BY SEQ_NUM_USER ASC ) as TMP$ROWNUMBER
+     FROM RLXORM.TB_USER ORDER BY SEQ_NUM_USER ASC )
+    WHERE TMP$ROWNUMBER > :TMP$OFFSET
+      AND TMP$ROWNUMBER <= :TMP$LIMIT
 */
 
 
