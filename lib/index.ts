@@ -10,3 +10,4 @@ export { ResultOrder } from './enum/result-order.type';
 export { IFindOptions } from './interface/where.interface';
 export { ResultOrderType } from './interface/where.interface';
 export { DataType } from './enum/data.type';
+export { Op } from './enum/operator.type';

@@ -16,10 +16,10 @@ export interface IFindOptions<T> {
 }
 
 export type WhereOptions<T> = {
-  [P in keyof T]?: PrimitiveTypes | WhereLogic | WhereOptions<T[P]> | Array<WhereOptions<T>>;
+  [P in keyof T]?: PrimitiveTypes | WhereLogic<T> | WhereOptions<T[P]> | WhereOptions<T>[];
 };
 
-export type WhereLogic = Partial<{
+export type WhereLogic<T> = Partial<{
   $eq: PrimitiveTypes,
   // $in: Array<string | number>;
   // $like: string;
@@ -28,6 +28,6 @@ export type WhereLogic = Partial<{
   // $gt: string | Date | number;
   // $gte: string | Date | number;
   // $between: string | Date | number;
-  // $or: Array<any>
-  // $and: Array<any>
+  $or: WhereOptions<T>[],
+  $and: WhereOptions<T>[],
 }>;
