@@ -21,7 +21,7 @@ export type WhereOptions<T> = {
 
 export type WhereLogic<T> = Partial<{
   $eq: PrimitiveTypes,
-  // $in: Array<string | number>;
+  $in: PrimitiveTypes[],
   // $like: string;
   // $lt: string | Date | number;
   // $lte: string | Date | number;

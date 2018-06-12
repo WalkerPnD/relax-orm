@@ -8,8 +8,9 @@
 
 A lite ORM Designed to reduce the stress you feel while leading with OracleDB.  
 Inspired by [Sequelize](http://docs.sequelizejs.com) and [SequelizeTypescript](https://github.com/RobinBuschmann/sequelize-typescript)
+Please see change log to checkout new functions.
 
-[TypeScript Demo App](https://github.com/walker-walks/relax-orm-typescript-demo)
+[ChangeLog](./CHANGELOG.md) | [TypeScript Demo App](https://github.com/walker-walks/relax-orm-typescript-demo)
 
 ## Getting started
 
@@ -220,4 +221,17 @@ SELECT SEQ_NUM_USER, NAME
 */
 
 
+res = await User.findAll({
+  where: {
+    [Op.or]: [
+      { id: { [Op.in]: [userWalker.id, userKoji.id] } },
+      { name: userRelax.name },
+    ],
+  },
+});
+/* Generates
+SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USER
+ WHERE ( SEQ_NUM_USER IN ( :id$in$0, :id$in$1 ) )
+    OR ( NAME = :name$ )
+*/
 ```
