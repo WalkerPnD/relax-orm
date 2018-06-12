@@ -206,10 +206,10 @@ res = await User.findAll({
 });
 /* Generates: it uses ROW_NUMBER function with over to use ordered result
 SELECT SEQ_NUM_USER, NAME
-  FROM( SELECT SEQ_NUM_USER, NAME, ROW_NUMBER()
-  OVER( ORDER BY NAME ASC ) as TMP$ROWNUMBER
-    FROM RLXORM.TB_USER ORDER BY NAME ASC )
-   WHERE TMP$ROWNUMBER <= :TMP$LIMIT
+  FROM ( SELECT SEQ_NUM_USER, NAME, ROW_NUMBER()
+  OVER ( ORDER BY NAME ASC ) as TMP$ROWNUMBER
+  FROM RLXORM.TB_USER ORDER BY NAME ASC )
+ WHERE TMP$ROWNUMBER <= :TMP$LIMIT
 */
 
 res = await User.findAll({
@@ -220,18 +220,18 @@ res = await User.findAll({
 /* Genarates
 SELECT SEQ_NUM_USER, NAME
   FROM ( SELECT SEQ_NUM_USER, NAME, ROW_NUMBER()
-  OVER( ORDER BY SEQ_NUM_USER ASC ) as TMP$ROWNUMBER
-     FROM RLXORM.TB_USER ORDER BY SEQ_NUM_USER ASC )
-    WHERE TMP$ROWNUMBER > :TMP$OFFSET
-      AND TMP$ROWNUMBER <= :TMP$LIMIT
+  OVER ( ORDER BY SEQ_NUM_USER ASC ) as TMP$ROWNUMBER
+  FROM RLXORM.TB_USER ORDER BY SEQ_NUM_USER ASC )
+ WHERE TMP$ROWNUMBER > :TMP$OFFSET
+   AND TMP$ROWNUMBER <= :TMP$LIMIT
 */
 
 
 res = await User.findAll({
   where: {
     [Op.or]: [
-      { id: { [Op.in]: [userWalker.id, userKoji.id] } },
-      { name: userRelax.name },
+      { id: { [Op.in]: [1, 2] } },
+      { name: 'walker' },
     ],
   },
 });
