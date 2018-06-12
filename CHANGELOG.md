@@ -4,6 +4,16 @@
 ## Semantic Versioning
 https://semver.org/
 
+## [v1.2.0] - 2018-06-11
+> feat(findOptions): added IN operator
+- added Entity [findAll/findOne]: Acepts IN root operators.
+- added Documentation [FindOptions]: IN Examples and Query Generated.
+
+## [v1.1.0] - 2018-06-10
+> feat(findOptions): added OR and AND operator
+- added Entity [findAll/findOne]: Acepts AND and OR root operators.
+- added Documentation [FindOptions]: AND/OR Examples and Query Generated.
+
 ## [v0.9.0] - 2018-06-02
 > feat(Entity): added destroy/destroyAll function
 - added Entity [destroy]: deletes with where parameter.

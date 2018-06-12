@@ -1,6 +1,7 @@
 import { Op } from '../enum/operator.type';
 import { ITableAttr } from '../interface/table-attribute.interface';
 import { MapperObject, WhereOptions } from '../interface/where.interface';
+import { parseIn } from './in.parser';
 
 export function parseWhere<T>(whereOptions: WhereOptions<T>, cols: ITableAttr, binds: MapperObject, op?: Symbol): string {
   const keys = Object.keys(cols.columsInfo);
@@ -16,9 +17,23 @@ export function parseWhere<T>(whereOptions: WhereOptions<T>, cols: ITableAttr, b
     if (!val) {
       return;
     }
+
+    const valType = typeof val;
     const bindKey = `${k}$`;
-    res += ` ${cols.columsInfo[k].column} = :${bindKey} AND`;
-    binds[bindKey] = val;
+    if (valType === 'string' || valType === 'number' || val instanceof Date) {
+      res += ` ${cols.columsInfo[k].column} = :${bindKey} AND`;
+      binds[bindKey] = val;
+      return;
+    }
+    const op = Object.getOwnPropertySymbols(val)[0];
+
+    switch (op) {
+      case Op.in:
+        res += ` ${parseIn(val[op], k, cols.columsInfo[k].column, binds)} AND`;
+        break;
+      default:
+        break;
+    }
   });
   res = res.slice(0, -4);
 
