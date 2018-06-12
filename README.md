@@ -68,13 +68,13 @@ After registering you can use the basic queries.
 
 ```typescript
 User.findAll()
-/* Generages: 
+/* Generates: 
 SELECT SEQ_NUM_USER, NAME
   FROM RLXORM.TB_USE
 */
 
 User.findAll( {where: { id: 1, name: 'walker' } });
-/* Generages: 
+/* Generates: 
 SELECT SEQ_NUM_USER, NAME
   FROM RLXORM.TB_USER
  WHERE SEQ_NUM_USER = :id$ AND NAME = :name$
@@ -84,9 +84,9 @@ User.create({
   id: 10, // If @Sequence is declared, this value will be ignored
   name: 'walker'
 })
-/* Generages: 
-INSERT
-      INTO RLXORM.TB_USER ( SEQ_NUM_USER, NAME )
+/* Generates: 
+INSERT INTO RLXORM.TB_USER
+           ( SEQ_NUM_USER, NAME )
     VALUES ( RLXORM.SQ_USER.NEXTVAL, :name$ )
  RETURNING SEQ_NUM_USER, NAME
       INTO :out$id, :out$name
@@ -94,26 +94,32 @@ INSERT
 
 // Saving entity
 const user = User.findOne({ where: {id: 1} });
-/* Generages: 
-SELECT SEQ_NUM_USER, NAME FROM RLXORM.TB_USER WHERE SEQ_NUM_USER = :id$
+/* Generates: 
+SELECT SEQ_NUM_USER, NAME
+  FROM RLXORM.TB_USER
+ WHERE SEQ_NUM_USER = :id$
 */
 
 user.name = 'style';
 user.save();
-/* Generages: 
-UPDATE RLXORM.TB_USER SET SEQ_NUM_USER = :id$, NAME = :name$ WHERE SEQ_NUM_USER = :key$id RETURNING SEQ_NUM_USER, NAME INTO :out$id, :out$name
+/* Generates: 
+   UPDATE RLXORM.TB_USER
+      SET SEQ_NUM_USER = :id$, NAME = :name$
+    WHERE SEQ_NUM_USER = :key$id
+RETURNING SEQ_NUM_USER, NAME
+     INTO :out$id, :out$name
 */
 
 User.destroy({
   name: 'walker'
 });
-/* Generages: **NOTE** IT WILL DELETE RECORDS USING WHERE FILTER
+/* Generates: **NOTE** IT WILL DELETE RECORDS USING WHERE FILTER
 DELETE FROM RLXORM.TB_USER WHERE NAME = :name$
 */
 
 
 User.destroyAll();
-/* Generages: **NOTE** IT WILL DELETE ALL RECORDS FROM TABLE
+/* Generates: **NOTE** IT WILL DELETE ALL RECORDS FROM TABLE
 DELETE FROM RLXORM.TB_USER
 */
 ```
